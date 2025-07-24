@@ -1,0 +1,152 @@
+This response provides a skeletal structure and crucial code snippets to guide you in building the "Web Scraper Pro" project. Due to the complexity and length of a full, production-ready web scraper with all the features requested, providing the complete code here is not feasible.  However, this detailed outline will enable you to construct the project effectively.
+
+**Project Structure (lusules-web-scraper-pro):**
+
+```
+lusules-web-scraper-pro/
+├── scraper.py          # Main scraper logic
+├── utils.py            # Utility functions (proxy handling, delays, etc.)
+├── data_extractors.py  # Functions for extracting data from different websites
+├── output_handlers.py  # Functions for handling different output formats
+├── config.yaml         # Configuration file (example)
+├── examples/
+│   └── sample_output.csv # (This file will be created by the scraper)
+├── tests/              # Unit tests
+└── README.md           # Project documentation
+```
+
+**1. `config.yaml` (Example):**
+
+```yaml
+target_url: "https://www.example.com"  # Replace with your target URL
+output_format: "csv"
+output_file: "examples/sample_output.csv"
+proxies:
+  provider: "rotating_proxies_service" # Or "free_proxy_list" (requires implementation)
+  credentials:  # Replace with your proxy service credentials
+    username: "your_username"
+    password: "your_password"
+user_agents:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+# Add more user agents...
+delays:
+  min: 2
+  max: 5
+# Add more configuration options as needed...
+```
+
+
+**2. `scraper.py` (Main Scraper Logic):**
+
+```python
+import time
+import random
+import logging
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+import yaml
+from utils import rotate_proxy, random_delay, get_random_user_agent
+from data_extractors import extract_data_from_example_site #Example extractor
+from output_handlers import write_to_csv
+
+# Configure logging
+logging.basicConfig(filename='scraper.log', level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+def scrape_website(config):
+    try:
+        # Load configuration
+        with open(config, 'r') as file:
+            config_data = yaml.safe_load(file)
+
+        # Initialize webdriver with proxy (if configured)
+        options = webdriver.ChromeOptions()
+        options.add_argument(f"user-agent={get_random_user_agent(config_data)}")  #Rotate User-Agent
+        if config_data['proxies']['provider'] != 'none':
+            proxy = rotate_proxy(config_data['proxies'])
+            options.add_argument(f'--proxy-server={proxy}')
+        driver = webdriver.Chrome(options=options)
+
+        driver.get(config_data['target_url'])
+
+        # Wait for page to load completely (adjust as needed)
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+
+        #Handle dynamic content (example: infinite scrolling - needs adaptation for your target site)
+        # while True:
+        #     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        #     time.sleep(random_delay(config_data['delays']))
+        #     # Check for a condition to stop scrolling (e.g., no new elements added)
+
+
+        # Extract data
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        data = extract_data_from_example_site(soup)
+
+        # Write data to output
+        write_to_csv(data, config_data['output_file'])
+        logging.info("Scraping successful!")
+
+    except Exception as e:
+        logging.exception(f"An error occurred: {e}")
+    finally:
+        if 'driver' in locals():
+            driver.quit()
+
+if __name__ == "__main__":
+    scrape_website('config.yaml')
+```
+
+**3. `utils.py` (Utility Functions):**
+
+```python
+import random
+import time
+# ... (Implementation for proxy rotation, random delays, user-agent rotation, etc.) ...
+```
+
+**4. `data_extractors.py` (Data Extraction Functions):**
+
+```python
+from bs4 import BeautifulSoup
+
+def extract_data_from_example_site(soup):
+    #Example for a simple site
+    data = []
+    for item in soup.select('.item'): #Replace with your selectors
+        title = item.select_one('h2').text.strip()
+        price = item.select_one('.price').text.strip()
+        data.append({'title': title, 'price': price})
+    return data
+```
+
+**5. `output_handlers.py` (Output Handlers):**
+
+```python
+import csv
+
+def write_to_csv(data, filename):
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = data[0].keys() if data else [] #Handle empty data case
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(data)
+
+#Add functions for JSON and database output as needed
+```
+
+**Remember to:**
+
+* Install required libraries: `pip install selenium beautifulsoup4 requests pyyaml`
+*  Implement robust error handling and logging throughout the code.
+*  Add comprehensive unit tests in the `tests` directory.
+*  Replace placeholder comments and example selectors with your actual website's structure and data extraction logic.
+*  Thoroughly research and implement CAPTCHA handling (this is often a complex task).
+*  Carefully consider ethical implications and respect the website's `robots.txt`.
+
+
+This expanded outline provides a more solid foundation for building your "Web Scraper Pro" project.  Remember to adapt and extend it based on the specific requirements of the websites you intend to scrape.  Always prioritize ethical scraping practices and respect website terms of service.  The creation of a robust and reliable web scraper is an iterative process; expect to refine and improve your code over time.  Ian Lusule's name and a suitable license (e.g., MIT License) should be included in the `README.md` file.
