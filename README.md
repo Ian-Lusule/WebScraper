@@ -1,4 +1,4 @@
-# lusules-web-scraper-pro
+# WebSCraper
 
 **By Ian Lusule**
 
@@ -7,7 +7,7 @@
 
 ## Description
 
-`lusules-web-scraper-pro` is a powerful and robust Python web scraper designed for extracting data from dynamic websites.  It incorporates advanced anti-detection techniques, proxy rotation, and flexible configuration options to ensure reliable and efficient scraping. This project prioritizes maintainability, extensibility, and ease of use.
+`WebScraper` is a powerful and robust Python web scraper designed for extracting data from dynamic websites.  It incorporates advanced anti-detection techniques, proxy rotation, and flexible configuration options to ensure reliable and efficient scraping. This project prioritizes maintainability, extensibility, and ease of use.
 
 
 ## Features
@@ -27,8 +27,8 @@
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/[YourGitHubUsername]/lusules-web-scraper-pro.git
-cd lusules-web-scraper-pro
+git clone https://github.com/Ian-Lusule/WebScraper.git
+cd WebScraper
 ```
 
 2. **Create a virtual environment (recommended):**
