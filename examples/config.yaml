@@ -1,0 +1,55 @@
+```yaml
+# lusules-web-scraper-pro/examples/config.yaml
+
+# Scraper Configuration
+
+# Target Website
+target_url: "https://www.example.com" # Replace with your target URL
+
+# Output
+output_format: "csv"  # Options: csv, json, sqlite
+output_file: "output.csv"  # Output file path
+database_name: "scraper_data.db" # For sqlite output
+
+# Proxy Settings
+proxy_provider: "rotating_proxies" # Options: rotating_proxies, free_proxies (requires further configuration)
+proxy_username: "YOUR_PROXY_USERNAME" # Replace with your proxy username (if applicable)
+proxy_password: "YOUR_PROXY_PASSWORD" # Replace with your proxy password (if applicable)
+proxy_list_file: "proxy_list.txt" # Path to a file containing a list of proxies (if using free_proxies)
+
+# Anti-Detection Settings
+user_agent_list:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
+  - "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:109.0) Gecko/20100101 Firefox/110.0"
+
+# Delay settings (in seconds)
+min_delay: 2
+max_delay: 5
+
+# Data Extraction Rules (Example - adjust for your target website)
+extraction_rules:
+  - selector: "#product-title"  # CSS selector
+    field: "product_title"
+  - selector: ".price"       # CSS selector
+    field: "price"
+  - xpath: "//table[@id='product-table']//tr" # XPath expression for table rows
+    field: "product_details" # process this field separately to extract individual cells
+
+
+# CAPTCHA Handling (Optional - requires integration with a CAPTCHA solving service)
+captcha_service: "None" # Options: "None", "2captcha", "anticaptcha" etc. (Requires API keys)
+captcha_api_key: "YOUR_CAPTCHA_API_KEY" # Replace with your API key
+
+
+# Logging
+log_file: "scraper.log"
+log_level: "INFO" # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+# Selenium settings (Optional - adjust if needed)
+selenium_webdriver_path: "/path/to/chromedriver" # Path to your webdriver executable (e.g., chromedriver)
+headless_mode: true # Run Selenium in headless mode (no browser window)
+```
+
+
+**Note:**  This `config.yaml` file provides a structure.  You'll need to replace placeholder values (URLs, API keys, paths) with your actual information and adapt the `extraction_rules` section to match the specific HTML structure of the website you intend to scrape.  The `proxy_provider` and `captcha_service` options require additional configuration and integration with external services (if you choose to use them).  The `selenium_webdriver_path` needs the correct path to your webdriver.  Remember to install the `PyYAML` library (`pip install pyyaml`) to use this YAML configuration file.
